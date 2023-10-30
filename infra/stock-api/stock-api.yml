@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: stocks
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+  namespace: stocks
+spec:
+  selector:
+    app: stocks-api
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8000
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: stocks
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: stocks-api
+  template:
+    metadata:
+      labels:
+        app: stocks-api
+    spec:
+      containers:
+        - name: api
+          image: nginx:latest
+          ports:
+            - containerPort: 8000
+      imagePullSecrets:
+      - name: packages-github-com
