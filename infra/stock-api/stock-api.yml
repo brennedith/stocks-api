@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: nginx:latest
+          image: ghcr.io/brennedith/stocks-api:main
           ports:
             - containerPort: 8000
       imagePullSecrets:
