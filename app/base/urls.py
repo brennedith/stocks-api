@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('_/', include('plt.urls', namespace='plt')),
+    path('', include('api.urls', namespace='api')),
 ]

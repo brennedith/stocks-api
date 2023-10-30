@@ -25,8 +25,9 @@ class WallStreeSurvivorSource(BaseSource):
     'Status': 'fee',
     'Order Date': 'date_time',
   }
+  identifier = 'wallstreetsurvivor'
 
-  def autenticate(self, username, password):
+  def authenticate(self, username, password):
     url = f'{self._fqdn}/login'
     headers = self._default_headers
     data = f'UserName={username}&Password={password}'
@@ -36,7 +37,7 @@ class WallStreeSurvivorSource(BaseSource):
 
     return auth_cookie
 
-  def request(self, auth, start_date, end_date):
+  def fetch(self, auth, start_date, end_date):
     base_url = f'{self._fqdn}/account/getorderhistory?'
     querys = {
       'sortField': 'CreateDate',

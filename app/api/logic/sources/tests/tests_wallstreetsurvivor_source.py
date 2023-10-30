@@ -4,11 +4,11 @@ from django.test import TestCase
 
 from api.logic.sources.wallstreetsurvivor_source import WallStreeSurvivorSource
 
-class TestBaseSource(TestCase):
+class TestWallStreeSurvivorSource(TestCase):
       
 
     @patch('api.logic.sources.wallstreetsurvivor_source.requests.post')
-    def test_authenticate_success_test(self, mock_post):
+    def test_authenticate_success(self, mock_post):
         source = WallStreeSurvivorSource()
 
         mock_response = unittest.mock.Mock()
@@ -17,7 +17,7 @@ class TestBaseSource(TestCase):
         mock_response.cookies[source._cookie_name] = mock_cookie_value
         mock_post.return_value = mock_response
 
-        result = source.autenticate('John', 'Snow')
+        result = source.authenticate('John', 'Snow')
 
         mock_post.assert_called_once_with(
             source._fqdn + '/login',
@@ -29,7 +29,7 @@ class TestBaseSource(TestCase):
         self.assertEqual(result, mock_cookie_value)
 
     @patch('api.logic.sources.wallstreetsurvivor_source.requests.get')
-    def test_request_success_test(self, mock_get):
+    def test_request_success(self, mock_get):
         source = WallStreeSurvivorSource()
         cookie_value = 123456
         start_date = '2024-11-1'
@@ -47,7 +47,7 @@ class TestBaseSource(TestCase):
           'Cookie': f'{source._cookie_name}={cookie_value}'
         }
 
-        result = source.request(cookie_value, start_date, end_date)
+        result = source.fetch(cookie_value, start_date, end_date)
 
         mock_get.assert_called_once_with(
             base_url + querys,
@@ -56,7 +56,7 @@ class TestBaseSource(TestCase):
 
         self.assertEqual(result, mock_html)
 
-    def test_request_success_test(self):
+    def test_request_success(self):
         source = WallStreeSurvivorSource()
 
         mock_html = """
