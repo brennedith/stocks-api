@@ -15,16 +15,16 @@ class WallStreeSurvivorSource(BaseSource):
       'Origin': _fqdn,
   }
   _cookie_name = '.FASTRAKMVC'
-  _header_keys = {
-    '': 'actions',
-    'Order': 'transaction_type',
-    'Symbol': 'symbol',
-    'Quantity': 'quantity',
-    'Price Filled': 'type',
-    'Order Date': 'price_status',
-    'Status': 'fee',
-    'Order Date': 'date_time',
-  }
+  _header_keys = [
+    'actions',
+    'transaction_type',
+    'symbol',
+    'quantity',
+    'type',
+    'price_status',
+    'fee',
+    'date_time',
+  ]
   identifier = 'wallstreetsurvivor'
 
   def authenticate(self, username, password):
@@ -38,35 +38,29 @@ class WallStreeSurvivorSource(BaseSource):
     return auth_cookie
 
   def fetch(self, auth, start_date, end_date):
-    base_url = f'{self._fqdn}/account/getorderhistory?'
+    base_url = f'{self._fqdn}/account/gettransactions?'
     querys = {
-      'sortField': 'CreateDate',
-      'sortDirection': 'DESC',
-      'pageIndex': 0,
-      'pageSize': 12,
+      'transactionType': 1,
       'startDate': start_date,
       'endDate': end_date,
+      'pageIndex': 0,
+      'pageSize': 12,
+      'sortField': 'CreateDate',
+      'sortDirection': 'DESC',
     }
     url = base_url + urlencode(querys)
     headers = {
       **self._default_headers,
       'Cookie': f'{self._cookie_name}={auth}'
     }
-
     response = requests.get(url, headers=headers)
     html = response.json().get('Html')
-
     return html
 
   def parse(self, html):
     soup = BeautifulSoup(html, 'html.parser')
-    
-    # map headers
-    table_header_elements = soup.find('thead').find_all('th')
-    table_headers = list(map(lambda element: self._cleanText(element.text), table_header_elements))
-
     # create a 2d array with table content
-    table_rows = soup.find('tbody').find_all('tr')
+    table_rows = soup.find_all('tr')
     transactions = []
 
     for row in table_rows:
@@ -74,12 +68,11 @@ class WallStreeSurvivorSource(BaseSource):
       transaction = {}
 
       for index, cell in enumerate(row_cells):
-        table_header = table_headers[index]
-        header_key = self._header_keys.get(table_header)
+        table_header = self._header_keys[index]
 
-        if(header_key != None):
-          transaction[header_key] = self._cleanText(cell.text)
+        if(table_header != None):
+          transaction[table_header] = self._cleanText(cell.text)
       
       transactions.append(transaction)
-        
+    
     return transactions
