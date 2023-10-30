@@ -39,6 +39,7 @@ spec:
       containers:
         - name: api
           image: ghcr.io/brennedith/stocks-api:main
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
       imagePullSecrets:
