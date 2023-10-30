@@ -59,53 +59,19 @@ class TestWallStreeSurvivorSource(TestCase):
     def test_request_success(self):
         source = WallStreeSurvivorSource()
 
-        mock_html = """
-<table>
-  <thead>
-    <tr>
-      <th>&nbsp;</th>
-      <th>Symbol</th>
-      <th>Quantity</th>
-      <th>Order</th>
-      <th>Order Price</th>
-      <th>Price Filled</th>
-      <th>Order Date</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody id="order-history-container">
-    <tr>
-      <td class="actions"> <a data-status="137454734" class="cancelorder" title="Cancel"><i class="fa fa-close"
-            aria-hidden="true"></i></a> <a
-          href="/trading/Equities?symbol=NKE&amp;quantity=200&amp;exchange=US&amp;edit=True&amp;oldorderid=137454734"
-          title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></a> <a data-open="add-view-notes"
-          data-order-conf="6bcad04e-6917-493e-b2c5-c2e05f15dce0" class="openModal" title="Trade Notes"><i
-            class="fa fa-sticky-note-o" aria-hidden="true"></i></a> </td>
-      <td><a href="#">NKE</a></td>
-      <td>200</td>
-      <td>Market - Buy</td>
-      <td>MKT</td>
-      <td></td>
-      <td>10/29/2023</td>
-      <td><span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false"
-          tabindex="2">Open</span></td>
-    </tr>
-  </tbody>
-</table>
-<script
-  type="text/javascript">        $(function () { $(".openModal").on('click', function () {                //var orderId = this.getAttribute('data-order-id');                var orderConf = this.getAttribute('data-order-conf');                //setOrderId(orderId);                setOrderConfirmation(orderConf);                var data = {                    pageIndex: currentPageIndex,                    pageSize: pageSize,                    orderConf: orderConf                };                $.get('/account/gettradingnotesbyorder', data, function (result) {                    $('#add-view-notes').foundation('open');                    if (result.Count > 0) {                        //$("#tblTradeNotes").show();                        $('#trade-notes').html(result.Html);                    }                    else {                        //$("#tblTradeNotes").hide();                        $('#trade-notes').empty();                        $('#trade-notes').append('<tr id="msg"><td colspan="2" class="text-center">You do not have any notes for this trade. Click "Add Note" to write one.</td></tr>');                    }                });            });        });</script>
-"""
+        mock_html = "\r\n    <tr>\r\n        <td class=\"actions\">\n            \n            <a class=\"fa fa-exchange\" href=\"/trading/Equities?symbol=INTC&amp;exchange=US\"> </a>\n\t\t\t\t\t\t\t\t\t\n                <a data-order-id=\"dac2b008-da40-4339-bccf-a94bcfe6ba2b\" class=\"openModal\" title=\"Trade Notes\"><i class=\"fa fa-sticky-note-o\" aria-hidden=\"true\"></i></a>\r\n\t\t</td>\r\n        <td>Market - Buy</td>\r\n        <td><a href=\"#\">INTC</a></td>\r\n        <td>22</td>\r\n        <td>Equities</td>\r\n        <td>\r\n            $35.3700\r\n        </td>\r\n        <td>1.00</td>\r\n        <td>\r\n            10/30/2023 - 09:33\r\n        </td>\r\n    </tr>\r\n\r\n<script type=\"text/javascript\">\r\n    $(function () {\r\n        $(\".openModal\").on('click', function () {\r\n            var orderConf = this.getAttribute('data-order-id');\r\n            setOrderConfirmation(orderConf);\r\n            var data = {\r\n                pageIndex: currentPageIndex,\r\n                pageSize: pageSize,\r\n                orderConf: orderConf\r\n            };\r\n</script>"
 
         result = source.parse(mock_html)
         expected = [
           {
             "actions": "",
-            "symbol": "NKE",
-            "quantity": "200",
+            "symbol": "INTC",
+            "quantity": "22",
+            "price_status": "$35.3700",
             "transaction_type": "Market - Buy",
-            "type": "",
-            "date_time": "10/29/2023",
-            "fee": "Open"
+            "type": "Equities",
+            "date_time": "10/30/2023 - 09:33",
+            "fee": "1.00"
           },
         ]
         self.assertEqual(result, expected)
