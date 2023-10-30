@@ -1,5 +1,10 @@
 name: Django CI Tests
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ./app
+
 on:
   pull_request:
     branches: [ "main" ]
@@ -8,10 +13,6 @@ jobs:
   tests:
 
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./app
 
     strategy:
       max-parallel: 4
