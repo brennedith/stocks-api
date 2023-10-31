@@ -1,14 +1,17 @@
 class AutenticationFailedSourceMock:
+  identifier = 'TestSource'
   def authenticate(self, username, password):
     raise Exception()
 
 
 class AutenticationNoneSourceMock:
+  identifier = 'TestSource'
   def authenticate(self, username, password):
     return None
 
 
 class FetchFailedSourceMock:
+  identifier = 'TestSource'
   def authenticate(self, username, password):
     return ''
   def fetch(self, auth, start_date, end_date):
@@ -16,6 +19,7 @@ class FetchFailedSourceMock:
 
 
 class FetchNoneSourceMock:
+  identifier = 'TestSource'
   def authenticate(self, username, password):
     return ''
   def fetch(self, auth, start_date, end_date):
@@ -23,6 +27,7 @@ class FetchNoneSourceMock:
 
 
 class ParseFailedSourceMock:
+  identifier = 'TestSource'
   def authenticate(self, username, password):
     return ''
   def fetch(self, auth, start_date, end_date):
@@ -32,6 +37,7 @@ class ParseFailedSourceMock:
 
 
 class ParseNoneSourceMock:
+  identifier = 'TestSource'
   def authenticate(self, username, password):
     return ''
   def fetch(self, auth, start_date, end_date):
@@ -41,6 +47,7 @@ class ParseNoneSourceMock:
 
 
 class ParseValidResponseSourceMock:
+  identifier = 'TestSource'
   def authenticate(self, username, password):
     return ''
   def fetch(self, auth, start_date, end_date):
