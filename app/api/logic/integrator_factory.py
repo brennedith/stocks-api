@@ -2,6 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
+from api.models import TransactionHistory
+
 from .integrator_serializers import IntegrationRequestSerializer, IntegrationRequestResponse
 
 
@@ -54,6 +56,14 @@ def IntegratorFactory(Source):
       # TODO: Increment 'response-validation' error metric for tag:source
       return Response({'message': 'Internal serverl error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    try:
+      transactions = map(lambda transaction: TransactionHistory(**{**transaction, 'source': source.identifier}), response)
+
+      TransactionHistory.objects.bulk_create(list(transactions))
+    except Exception as e:
+      print(e)
+      # TODO: Increment 'response-validation' error metric for tag:source
+      return Response({'message': 'Internal serverl error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     # TODO: Increment 'success-response' metric for tag:source
     return Response(response)
