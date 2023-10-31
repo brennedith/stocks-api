@@ -42,5 +42,8 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: database-secrets
       imagePullSecrets:
       - name: packages-github-com

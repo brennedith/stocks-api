@@ -14,6 +14,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+PRODUCTION = os.environ.get('PRODUCTION', False)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!#!2trxbrw+#^(!$$+^oo!gj@3bvbo=n!#v@my%5a)5$6_9r18'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not os.environ.get('PRODUCTION', False)
+DEBUG = not PRODUCTION
 
 ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1]', '.brenn.dev']
 
@@ -80,7 +82,7 @@ WSGI_APPLICATION = 'base.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if os.environ.get('PRODUCTION'):
+if PRODUCTION:
     # Use a different database for production (e.g., PostgreSQL)
     DATABASES = {
         'default': {
