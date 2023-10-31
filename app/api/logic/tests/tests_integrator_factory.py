@@ -67,8 +67,8 @@ class TestsIntegratorFactory(APITestCase):
         response = integrator(request)
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def test_parse_none(self):
-        integrator = IntegratorFactory(ParseValidResponseSourceMock)     
+    def test_happy_path(self):
+        integrator = IntegratorFactory(ParseValidResponseSourceMock)
 
         request = self.rf.post('/', self.valid_request)
         response = integrator(request)
